@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunyu.bi.dao.DataSourceDao">
+
+
+    <!--保存数据selectKey若启用则添加成功后id会自动返回-->
+	<insert id="save" parameterType="DataSource">
+	<!-- <selectKey resultType="int" keyProperty="id" order="AFTER">-->
+		<!--	SELECT LAST_INSERT_ID()-->
+	<!--	 </selectKey>-->
+		insert into t_data_source(
+			uuid,
+			link_type,
+			link_name,
+			link_pwd,
+			dsname,
+			use,
+			link_url,
+			driver
+		) values (
+			#{uuid},
+			#{linkType},
+			#{linkName},
+			#{linkPwd},
+			#{dsname},
+			#{use},
+			#{linkUrl},
+			#{driver}
+		)
+	</insert>
+	<!--批量插入数据-->
+	<insert id="batchSave" parameterType="java.util.List">
+        insert into t_data_source(
+			uuid,
+			link_type,
+			link_name,
+			link_pwd,
+			dsname,
+			use,
+			link_url,
+			driver
+		) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+			#{item.uuid},
+			#{item.linkType},
+			#{item.linkName},
+			#{item.linkPwd},
+			#{item.dsname},
+			#{item.use},
+			#{item.linkUrl},
+			#{item.driver}
+            )
+        </foreach>
+	</insert>
+    <!--更新数据-->
+    <update id="update" parameterType="DataSource">
+    	update t_data_source
+		<trim prefix="set" suffixOverrides=",">
+			<if test="uuid!=null">uuid = #{uuid},</if>
+			<if test="linkType!=null">link_type = #{linkType},</if>
+			<if test="linkName!=null">link_name = #{linkName},</if>
+			<if test="linkPwd!=null">link_pwd = #{linkPwd},</if>
+			<if test="dsname!=null">dsname = #{dsname},</if>
+			<if test="use!=null">use = #{use},</if>
+			<if test="linkUrl!=null">link_url = #{linkUrl},</if>
+			<if test="driver!=null">driver = #{driver},</if>
+		</trim>
+    	where id = #{id}
+    </update>
+    <!--删除数据-->
+	<delete id="delete" parameterType="int">
+		delete from t_data_source where id = #{id}
+	</delete>
+
+    <!--根据id返回一条记录-->
+	<select id="queryById" parameterType="int" resultType="DataSource">
+	    select 
+			id,
+			uuid,
+			link_type,
+			link_name,
+			link_pwd,
+			dsname,
+			'use',
+			link_url,
+			driver
+ 		from t_data_source
+		where id=#{id}
+	</select>
+
+	<!--分页记录-->
+    <select id="queryPage" resultType="DataSource">
+        select 
+			id,
+			uuid,
+			link_type,
+			link_name,
+			link_pwd,
+			dsname,
+			use,
+			link_url,
+			driver
+ 		from t_data_source
+    </select>
+
+</mapper>
